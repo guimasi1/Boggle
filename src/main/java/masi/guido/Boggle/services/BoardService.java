@@ -24,10 +24,9 @@ public class BoardService {
     @Autowired
     CellDAO cellDAO;
 
-    public static List<String> dice = List.of("AAEEGN", "ELRTTY", "AOOTTW", "ABBJOO",
-                "EHRTVW", "CIMOTU", "DISTTY", "EIOSST",
-                "DELRVY", "ACHOPS", "HIMNQU", "EEINSU",
-                "EEGHNW", "AFFKPS", "HLNNRZ", "DEILRX");
+    public static List<String> dice = List.of("TACGIP","HNSRIE","TLSPUE","NUEOTC","CPVAGS","TAEOAI","OUGENL"
+            ,"FEHSIE","SAIOMR","ZQSBAF","RFPIGA","BFLOEN","QOMBAO","OIABCM","DLMCOI","RBTLIA","INEGTV",
+            "ESACLR","MIROCL","IAOCFR","ZNVDEA","ELROIU","TESOND","DVOMTI","MADECP");
 
     public Board findById(UUID id) {
         return boardDAO.findById(id).orElseThrow(() -> new NotFoundException("Board with id " + id + " not found"));
@@ -64,11 +63,6 @@ public class BoardService {
         Board board = this.findById(id);
         boardDAO.delete(board);
     }
-
-    public Board saveOnly(Board board) {
-        return boardDAO.save(board);
-    }
-
 
 
 }
