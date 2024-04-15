@@ -5,6 +5,7 @@ import masi.guido.Boggle.entities.*;
 import masi.guido.Boggle.exceptions.NotFoundException;
 import masi.guido.Boggle.payloads.board.NewBoardDTO;
 import masi.guido.Boggle.payloads.game.NewGameDTO;
+import masi.guido.Boggle.payloads.game.WordHandlingResponse;
 import masi.guido.Boggle.repositories.BoardDAO;
 import masi.guido.Boggle.repositories.GameDAO;
 import masi.guido.Boggle.repositories.ScoreDAO;
@@ -74,7 +75,7 @@ public class GameService {
         Board board = boardService.findById(boardId);
         // if the word is not present in the dictionary this line return false, else
         if(!dictionary.isWordPresent(word.toLowerCase())) return false;
-        // it starts to search for the word inside the board, and if it doesn't find it, it returns false
+        // it starts searching for the word inside the board, and if it doesn't find it, it returns false
         for (Cell cell : board.getCells()) {
             if (searchForWord(cell, board, word, 0, new HashSet<>())) {
                 return true;
@@ -120,8 +121,16 @@ public class GameService {
         return adjacentCells;
     }
 
-    public int addPoints(Score score, int points) {
+    public int addPoints(Score score, int points, String word) {
            score.setScore(score.getScore() + points);
+           List<String> words;
+           if(score.getWords() != null) {
+               words = score.getWords();
+           } else {
+               words = new ArrayList<>();
+           }
+           words.add(word);
+           score.setWords(words);
            scoreDAO.save(score);
            return score.getScore() + points;
     }
@@ -132,18 +141,22 @@ public class GameService {
         return scoreDAO.findByUserAndGame(user, game).orElseThrow(() -> new NotFoundException("Score not found"));
     }
 
-    public int handleWord(String word,UUID game_id, UUID player_id) {
+    public WordHandlingResponse handleWord(String word,UUID game_id, UUID player_id) {
         Game game = this.findById(game_id);
         UUID boardId = game.getBoard().getId();
         Score score = this.findScoreByUserIdAndGameId(player_id, game_id);
-        // if the word is valid, this code adds points to the player's score
-        // else it doesn't do anything
         if(this.isWordValid(boardId,word)) {
-            int points = this.defineHowManyPoints(word);
-            this.addPoints(score, points);
+            if(!score.getWords().contains(word)) {
+                int points = this.defineHowManyPoints(word);
+                this.addPoints(score, points, word);
+            } else {
+                return new WordHandlingResponse("Word already added.");
+            }
+        } else {
+            return new WordHandlingResponse("Word not valid.");
         }
 
-        return score.getScore();
+        return new WordHandlingResponse("Points added: " + this.defineHowManyPoints(word) + ", Total points: " + score.getScore());
     }
 
     public int defineHowManyPoints(String word) {

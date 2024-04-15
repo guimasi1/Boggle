@@ -4,6 +4,7 @@ import masi.guido.Boggle.entities.User;
 import masi.guido.Boggle.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,11 @@ public class UserController {
                                   @RequestParam(defaultValue = "10") int size,
                                   @RequestParam(defaultValue = "id") String orderBy) {
         return userService.getAllUsers(page,size,orderBy);
+    }
+
+    @GetMapping("/me")
+    public User getMyProfile(@AuthenticationPrincipal User myUser) {
+        return myUser;
     }
 
 }

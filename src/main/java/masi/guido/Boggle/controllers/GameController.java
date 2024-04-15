@@ -7,6 +7,7 @@ import masi.guido.Boggle.entities.Score;
 import masi.guido.Boggle.exceptions.BadRequestException;
 import masi.guido.Boggle.payloads.game.GameResponseDTO;
 import masi.guido.Boggle.payloads.game.NewGameDTO;
+import masi.guido.Boggle.payloads.game.WordHandlingResponse;
 import masi.guido.Boggle.services.Dictionary;
 import masi.guido.Boggle.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class GameController {
 
 
     @GetMapping("/handleWord")
-    public int handleWord (@RequestParam String word, @RequestParam UUID game_id, @RequestParam UUID player_id) {
+    public WordHandlingResponse handleWord (@RequestParam String word, @RequestParam UUID game_id, @RequestParam UUID player_id) {
         return gameService.handleWord(word.toUpperCase(), game_id, player_id);
     }
 

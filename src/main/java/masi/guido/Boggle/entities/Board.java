@@ -12,6 +12,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
+@ToString
 @Table(name = "boards")
 public class Board {
     @Id
@@ -21,6 +22,7 @@ public class Board {
     @OneToOne
     @JoinColumn(name = "game_id")
     @JsonIgnore
+    @ToString.Exclude
     private Game game;
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Cell> cells;

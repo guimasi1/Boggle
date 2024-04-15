@@ -24,12 +24,11 @@ public class Game {
     @OneToOne
     @JoinColumn(name = "board_id")
     private Board board;
-    @ManyToMany(mappedBy = "games")
-    @JsonIgnore
+    @ManyToMany(mappedBy = "games", fetch = FetchType.EAGER)
     @ToString.Exclude
-    private List<User> users;
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     @JsonIgnore
+    private List<User> users;
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<Score> scores;
 }
