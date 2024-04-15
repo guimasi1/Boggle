@@ -1,3 +1,3 @@
 # Boggle 
 
-https://github.com/guimasi1/Boggle-FE
+Front-end repository: https://github.com/guimasi1/Boggle-FE
